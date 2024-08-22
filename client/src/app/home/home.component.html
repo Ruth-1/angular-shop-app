@@ -1,0 +1,52 @@
+<div class="column gap-1">
+  <!-- add product button -->
+  <button
+    type="button"
+    pButton
+    icon="pi pi-plus"
+    (click)="toggleAddPopup()"
+    label="Add Product"
+  ></button>
+
+  <!-- products -->
+  <div class="row wrap gap-1 space-between">
+    <!-- Loop through the products array and render an app-product component for each product -->
+
+    <!-- Angular directive to iterate over each product in the products array -->
+    <!-- Pass the current product object to the app-product component via the product input -->
+    <!-- Bind the output event from app-product to the onProductOutput method -->
+
+    <app-product
+      *ngFor="let product of products"
+      [product]="product"
+      (productOutput)="onProductOutput($event)"
+    ></app-product>
+    <!-- (productOutput)="onProductOutput($event)" is Angular's way of binding a custom event from a child component (productOutput) to a handler method (onProductOutput) in the parent component.
+
+    When the child component emits the productOutput event, the parent component's onProductOutput method is triggered, receiving the emitted data ($event) as its argument. -->
+  </div>
+  <!-- paginator -->
+  <p-paginator
+    [rows]="rows"
+    [totalRecords]="totalRecords"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    (onPageChange)="onPageChange($event)"
+  >
+  </p-paginator>
+</div>
+<!-- edit product -->
+<app-edit-popup
+  [product]="selectedProduct"
+  [display]="displayEditPopup"
+  (confirm)="onConfirmEdit($event)"
+  header="Edit Product"
+>
+</app-edit-popup>
+
+<!-- add product -->
+<app-edit-popup
+  [display]="displayAddPopup"
+  (confirm)="onConfirmAdd($event)"
+  header="Add Product"
+>
+</app-edit-popup>
