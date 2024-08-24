@@ -1,9 +1,9 @@
 <div class="column gap-1 wrapper">
   <img [src]="product.image" alt="Product Thumbnail" />
-  <h2 class="title">{{ product.name }}</h2>
+  <h2 class="title">{{ product.name | truncateName }}</h2>
   <div class="row gap-05">
     <span class="price-label">Price: </span>
-    <span class="price">{{ product.price }}</span>
+    <span class="price">{{ product.price | price }}</span>
   </div>
 
   <p-rating
@@ -11,24 +11,23 @@
     [readonly]="true"
     iconCancelClass="hidden"
   />
-  <div class="row">
+  <div class="row gap-05">
     <button
       type="button"
       pButton
-      icon="oi-pi-check"
+      icon="pi pi-pencil"
       (click)="editProduct()"
-      label="Confirm"
-    >
-      Edit
-    </button>
+      label="Edit"
+    ></button>
     <button
       type="button"
       pButton
-      icon="oi-pi-times"
-      (click)="deleteProduct()"
-      label="Cancel"
-    >
-      Delete
-    </button>
+      icon="pi pi-trash"
+      (click)="confirmDelete()"
+      label="Delete"
+      class="p-button-danger"
+      #deleteButton
+    ></button>
   </div>
 </div>
+<p-confirmPopup></p-confirmPopup>

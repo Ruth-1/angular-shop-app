@@ -6,10 +6,11 @@
     icon="pi pi-plus"
     (click)="toggleAddPopup()"
     label="Add Product"
+    class="add-product-btn"
   ></button>
 
   <!-- products -->
-  <div class="row wrap gap-1 space-between">
+  <div class="row wrap gap-2 justify-start">
     <!-- Loop through the products array and render an app-product component for each product -->
 
     <!-- Angular directive to iterate over each product in the products array -->
@@ -19,7 +20,8 @@
     <app-product
       *ngFor="let product of products"
       [product]="product"
-      (productOutput)="onProductOutput($event)"
+      (edit)="toggleEditPopup($event)"
+      (delete)="toggleDeletePopup($event)"
     ></app-product>
     <!-- (productOutput)="onProductOutput($event)" is Angular's way of binding a custom event from a child component (productOutput) to a handler method (onProductOutput) in the parent component.
 
@@ -31,13 +33,14 @@
     [totalRecords]="totalRecords"
     [rowsPerPageOptions]="[5, 10, 20]"
     (onPageChange)="onPageChange($event)"
+    #paginator
   >
   </p-paginator>
 </div>
 <!-- edit product -->
 <app-edit-popup
   [product]="selectedProduct"
-  [display]="displayEditPopup"
+  [(display)]="displayEditPopup"
   (confirm)="onConfirmEdit($event)"
   header="Edit Product"
 >
@@ -45,7 +48,7 @@
 
 <!-- add product -->
 <app-edit-popup
-  [display]="displayAddPopup"
+  [(display)]="displayAddPopup"
   (confirm)="onConfirmAdd($event)"
   header="Add Product"
 >

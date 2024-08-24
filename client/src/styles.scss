@@ -3,6 +3,7 @@
 @import "./styles/theme-override.scss";
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
 html,
 body,
 p,
@@ -75,6 +76,9 @@ app-root {
 }
 .justify-center {
   justify-content: center;
+}
+.justify-start {
+  justify-content: start;
 }
 .full-center {
   align-items: center;

@@ -1,18 +1,41 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Product } from '../../../types';
 import { RatingModule } from 'primeng/rating'; // Import PrimeNG's Rating module for displaying ratings
 import { FormsModule } from '@angular/forms'; // Import Angular's FormsModule for two-way binding
+import { ButtonModule } from 'primeng/button';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ToastModule } from 'primeng/toast';
+import { PricePipe } from '../../pipes/price.pipe';
+import { TruncateNamePipe } from '../../pipes/truncate-name.pipe';
 
 @Component({
   selector: 'app-product', // Defines the selector for this component, used in templates as <app-product>
   standalone: true,
-  imports: [RatingModule, FormsModule],
+  imports: [
+    RatingModule,
+    FormsModule,
+    ButtonModule,
+    ConfirmPopupModule,
+    ToastModule,
+    PricePipe,
+    TruncateNamePipe,
+  ],
+  providers: [ConfirmationService],
   templateUrl: './product.component.html',
   styleUrl: './product.component.scss',
 })
 export class ProductComponent {
+  constructor(private confirmationService: ConfirmationService) {}
   // Decorator to bind an input property to the component. This property will be passed down from the parent component.
 
+  @ViewChild('deleteButton') deleteButton: any;
   @Input()
   product!: Product; // The `product` input is expected to be of type `Product`. The `!` operator asserts that the value is never null or undefined.
 
@@ -20,8 +43,23 @@ export class ProductComponent {
   @Output() edit: EventEmitter<Product> = new EventEmitter<Product>();
   @Output() delete: EventEmitter<Product> = new EventEmitter<Product>();
 
+  truncateName(name: string) {
+    if (name.length > 17) {
+      return name.slice(0, 17) + '...';
+    }
+    return name;
+  }
   editProduct() {
     this.edit.emit(this.product);
+  }
+  confirmDelete() {
+    this.confirmationService.confirm({
+      target: this.deleteButton.nativeElement,
+      message: 'Are you sure that you want to delete this product?',
+      accept: () => {
+        this.deleteProduct();
+      },
+    });
   }
 
   deleteProduct() {

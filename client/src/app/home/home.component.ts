@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ProductsService } from '../services/products.service';
 import { Product, Products } from '../../types';
 import { ProductComponent } from '../components/product/product.component';
 import { CommonModule } from '@angular/common';
-import { PaginatorModule } from 'primeng/paginator';
+import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { EditPopupComponent } from '../components/edit-popup/edit-popup.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-home',
@@ -14,12 +15,15 @@ import { EditPopupComponent } from '../components/edit-popup/edit-popup.componen
     CommonModule,
     PaginatorModule,
     EditPopupComponent,
+    ButtonModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
   constructor(private productsService: ProductsService) {} // Inject the ProductsService to fetch products from the backend
+
+  @ViewChild('paginator') paginator: Paginator | undefined;
   products: Product[] = []; // Initialize an array to hold the products fetched from the server
 
   totalRecords: number = 0;
@@ -40,9 +44,15 @@ export class HomeComponent {
     this.selectedProduct = product;
     this.displayEditPopup = true;
   }
+  toggleDeletePopup(product: Product) {
+    if (!product.id) {
+      return;
+    }
+    this.deleteProduct(product.id);
+  }
 
   toggleAddPopup() {
-    this.displayEditPopup = true;
+    this.displayAddPopup = true;
   }
   onConfirmEdit(product: Product) {
     if (!this.selectedProduct.id) {
@@ -66,6 +76,10 @@ export class HomeComponent {
     this.fetchProducts(event.page, event.rows);
   }
 
+  resetPaginator() {
+    this.paginator?.changePage(0);
+  }
+
   fetchProducts(page: number, perPage: number) {
     this.productsService
       .getProducts('http://localhost:3000/clothes', { page, perPage })
@@ -85,6 +99,7 @@ export class HomeComponent {
         next: (data) => {
           console.log(data);
           this.fetchProducts(0, this.rows);
+          this.resetPaginator();
         },
         error: (error) => console.log(error),
       });
@@ -97,6 +112,7 @@ export class HomeComponent {
         next: (data) => {
           console.log(data);
           this.fetchProducts(0, this.rows);
+          this.resetPaginator();
         },
         error: (error) => console.log(error),
       });
@@ -109,6 +125,7 @@ export class HomeComponent {
         next: (data) => {
           console.log(data);
           this.fetchProducts(0, this.rows);
+          this.resetPaginator();
         },
         error: (error) => console.log(error),
       });
